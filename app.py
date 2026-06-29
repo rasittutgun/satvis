@@ -40,8 +40,16 @@ with st.sidebar:
     default_start = now_utc
     default_end = now_utc + timedelta(minutes=90)
 
-    start_dt = st.datetime_input("Start time (UTC)", value=default_start)
-    end_dt = st.datetime_input("Finish time (UTC)", value=default_end)
+    # Start datetime: separate date and time inputs combined with UTC timezone
+    start_date = st.date_input("Start date (UTC)", value=default_start.date())
+    start_time = st.time_input("Start time (UTC)", value=default_start.time())
+    start_dt = datetime.combine(start_date, start_time, tzinfo=timezone.utc)
+
+    # End datetime: separate date and time inputs combined with UTC timezone
+    end_date = st.date_input("Finish date (UTC)", value=default_end.date())
+    end_time = st.time_input("Finish time (UTC)", value=default_end.time())
+    end_dt = datetime.combine(end_date, end_time, tzinfo=timezone.utc)
+
     step_seconds = st.number_input("Time step (seconds)", min_value=1, max_value=3600, value=30, step=1)
 
     mode = st.selectbox("Visualization mode", options=["Static", "Animated"], index=0)
@@ -57,9 +65,9 @@ if run_clicked:
     try:
         satellite = parse_tle(tle_text)
 
-        # Streamlit datetime_input may return naive datetime.
-        start_utc = start_dt.replace(tzinfo=timezone.utc) if start_dt.tzinfo is None else start_dt.astimezone(timezone.utc)
-        end_utc = end_dt.replace(tzinfo=timezone.utc) if end_dt.tzinfo is None else end_dt.astimezone(timezone.utc)
+        # start_dt and end_dt are already UTC aware from datetime.combine()
+        start_utc = start_dt
+        end_utc = end_dt
 
         times_utc = build_time_grid(start_utc, end_utc, int(step_seconds))
         prop = propagate_nadir_track(satellite, times_utc)
