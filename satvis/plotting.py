@@ -32,8 +32,10 @@ from .core import (
     geodesic_circle_latlon
 )
 
+@dataclass
+class AnimationArtifacts:
+    fig: plt.Figure
     anim: animation.FuncAnimation
-
 
 def _geo_plot_kwargs() -> dict:
     """Return keyword args for geo plotting calls.
