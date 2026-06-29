@@ -16,14 +16,14 @@ from satvis.core import (
     footprint_angular_radius_rad,
     footprint_surface_radius_km,
     parse_tle,
-    propagate_nadir_track,
+    propagate_nadir_track
 )
 from satvis.plotting import (
     CARTOPY_AVAILABLE,
     CARTOPY_IMPORT_ERROR,
     build_animation,
     plot_static_ground_track,
-    save_animation_bytes,
+    save_animation_bytes
 )
 
 
