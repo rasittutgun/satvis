@@ -71,6 +71,13 @@ def _setup_map_axes(title: str = "LEO Satellite Ground Track") -> Tuple[plt.Figu
     return fig, ax
 
 
+def build_animation(
+    result: PropagationResult,
+    footprint_angular_radii_rad: Sequence[float],
+    interval_ms: int = 80,
+) -> AnimationArtifacts:
+    """Create a Matplotlib animation with moving satellite + footprint."""
+    if len(result.lats_deg) != len(footprint_angular_radii_rad):
         raise ValueError("Track and footprint radius lengths must match.")
 
     fig, ax = _setup_map_axes("LEO Ground Track (Static)")
