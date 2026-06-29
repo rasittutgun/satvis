@@ -66,7 +66,7 @@ def plot_static_ground_track(
                 seg_lons,
                 seg_lats,
                 transform=ccrs.PlateCarree(),
-                color="tab:orange",
+                color="tab:red",
                 alpha=0.15,
                 linewidth=0.7,
             )
@@ -166,4 +166,35 @@ def save_animation_bytes(
 ) -> Tuple[bytes, str, str]:
     """Render animation to bytes.
 
-    Returns
+    Returns: (binary_data, mime_type, suggested_extension)
+    """
+    import tempfile
+    from pathlib import Path
+
+    fmt = fmt.lower().strip()
+    if fmt not in {"gif", "mp4"}:
+        raise ValueError("Format must be 'gif' or 'mp4'.")
+
+    suffix = f".{fmt}"
+    with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
+        tmp_path = Path(tmp.name)
+
+    try:
+        if fmt == "gif":
+            writer = animation.PillowWriter(fps=fps)
+            anim.save(str(tmp_path), writer=writer)
+            return tmp_path.read_bytes(), "image/gif", "gif"
+
+        # mp4
+        try:
+            writer = animation.FFMpegWriter(fps=fps, bitrate=1800)
+            anim.save(str(tmp_path), writer=writer)
+        except Exception as exc:  # pragma: no cover - runtime environment dependent
+            raise RuntimeError(
+                "MP4 export error. ffmpeg might not be installed. Try GIF format."
+            ) from exc
+
+        return tmp_path.read_bytes(), "video/mp4", "mp4"
+    finally:
+        if tmp_path.exists():
+            tmp_path.unlink()
