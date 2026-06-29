@@ -2,7 +2,7 @@
 # Resolves cartopy C++ ABI compatibility issue (undefined symbol: _ZTINSt8ios_base7failureB5cxx11E)
 # by pinning to known-good wheel versions that are mutually ABI-compatible.
 
-streamlit==1.36.0
+streamlit>=1.36.0
 numpy==1.26.4
 scipy==1.11.4
 matplotlib==3.8.4
