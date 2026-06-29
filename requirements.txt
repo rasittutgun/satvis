@@ -1,6 +1,14 @@
-streamlit>=1.36.0
-numpy>=1.26.0
-matplotlib>=3.8.0
-skyfield>=1.49
-cartopy>=0.23.0
-pillow>=10.0.0
+# Fixed requirements for Streamlit Cloud (Python 3.11)
+# Resolves cartopy C++ ABI compatibility issue (undefined symbol: _ZTINSt8ios_base7failureB5cxx11E)
+# by pinning to known-good wheel versions that are mutually ABI-compatible.
+
+streamlit==1.36.0
+numpy==1.26.4
+scipy==1.11.4
+matplotlib==3.8.4
+pyproj==3.6.1
+shapely==2.0.3
+pyshp==2.3.1
+cartopy==0.22.0
+skyfield==1.49
+pillow==10.3.0
