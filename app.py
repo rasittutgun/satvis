@@ -11,9 +11,14 @@ from datetime import datetime, timedelta, timezone
 import numpy as np
 import streamlit as st
 
-from satvis.core import build_time_grid, footprint_angular_radius_rad, footprint_surface_radius_km, parse_tle, propagate_nadir_track
-
-from satvis.plotting import CARTOPY_AVAILABLE, CARTOPY_IMPORT_ERROR, build_animation, plot_static_ground_track, save_animation_bytes
+from satvis.core import (
+    build_time_grid,
+    footprint_angular_radius_rad,
+    footprint_surface_radius_km,
+    parse_tle,
+    propagate_nadir_track,
+)
+from satvis.plotting import build_animation, plot_static_ground_track, save_animation_bytes
 
 
 ISS_TLE_DEFAULT = """ISS (ZARYA)
@@ -25,13 +30,6 @@ ISS_TLE_DEFAULT = """ISS (ZARYA)
 st.set_page_config(page_title="LEO Satellite Visualizer", layout="wide")
 st.title("🛰️ LEO Satellite Visualizer (2D Earth Map)")
 st.caption("Skyfield + Cartopy based nadir track and antenna footprint visualization")
-
-if not CARTOPY_AVAILABLE:
-    st.warning(
-        "Cartopy could not be loaded in this runtime. "
-        "Using fallback lon/lat plotting mode (no coastlines). "
-        f"Details: {CARTOPY_IMPORT_ERROR}"
-    )
 
 with st.sidebar:
     st.header("Input Parameters")
