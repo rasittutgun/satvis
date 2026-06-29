@@ -33,21 +33,21 @@ st.caption("Skyfield + Cartopy based nadir track and antenna footprint visualiza
 
 with st.sidebar:
     st.header("Input Parameters")
-    tle_text = st.text_area("TLE (2 or 3 lines)", value=ISS_TLE_DEFAULT, height=140)
-    fov_deg = st.number_input("Antenna FoV (degrees)", min_value=0.1, max_value=179.0, value=30.0, step=0.5)
+    tle_text = st.text_area("TLE (2 veya 3 satır)", value=ISS_TLE_DEFAULT, height=140)
+    fov_deg = st.number_input("Antenna FoV (derece)", min_value=0.1, max_value=179.0, value=30.0, step=0.5)
 
     now_utc = datetime.now(timezone.utc)
     default_start = now_utc
     default_end = now_utc + timedelta(minutes=90)
 
     start_dt = st.datetime_input("Start time (UTC)", value=default_start)
-    end_dt = st.datetime_input("End time (UTC)", value=default_end)
+    end_dt = st.datetime_input("Finish time (UTC)", value=default_end)
     step_seconds = st.number_input("Time step (seconds)", min_value=1, max_value=3600, value=30, step=1)
 
     mode = st.selectbox("Visualization mode", options=["Static", "Animated"], index=0)
 
     st.markdown("---")
-    export_enabled = st.checkbox("Generate animation output (GIF/MP4)", value=False)
+    export_enabled = st.checkbox("Export animation output (GIF/MP4)", value=False)
     export_format = st.selectbox("Export format", options=["gif", "mp4"], index=0)
     export_fps = st.slider("FPS", min_value=5, max_value=60, value=20, step=1)
 
@@ -72,9 +72,9 @@ if run_clicked:
         )
 
         col1, col2, col3 = st.columns(3)
-        col1.metric("Sample Count", f"{len(prop.times_utc)}")
-        col2.metric("Average Altitude", f"{np.mean(prop.alt_km):.1f} km")
-        col3.metric("Average Footprint Radius", f"{np.mean(footprint_km):.1f} km")
+        col1.metric("Number of samples", f"{len(prop.times_utc)}")
+        col2.metric("Mean altitude", f"{np.mean(prop.alt_km):.1f} km")
+        col3.metric("Mean Footprint Radius", f"{np.mean(footprint_km):.1f} km")
 
         if mode == "Static":
             fig = plot_static_ground_track(prop, footprint_angular, footprint_stride=max(1, len(prop.times_utc) // 80))
@@ -102,16 +102,16 @@ if run_clicked:
                 except Exception as exc:
                     st.error(f"Export error: {exc}")
 
-        with st.expander("Calculation Summary"):
+        with st.expander("Calculation summary"):
             st.write(
                 {
                     "satellite": satellite.name,
-                    "start_time_utc": prop.times_utc[0].isoformat(),
-                    "end_time_utc": prop.times_utc[-1].isoformat(),
-                    "step_seconds": int(step_seconds),
+                    "time_start_utc": prop.times_utc[0].isoformat(),
+                    "time_finish_utc": prop.times_utc[-1].isoformat(),
+                    "time_step_sec": int(step_seconds),
                     "fov_deg": float(fov_deg),
-                    "min_altitude_km": float(np.min(prop.alt_km)),
-                    "max_altitude_km": float(np.max(prop.alt_km)),
+                    "altitude_km_min": float(np.min(prop.alt_km)),
+                    "altitude_km_max": float(np.max(prop.alt_km)),
                 }
             )
 
