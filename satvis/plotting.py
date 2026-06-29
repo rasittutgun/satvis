@@ -29,7 +29,8 @@ except Exception as exc:  # pragma: no cover - environment dependent
 
 from .core import (
     PropagationResult,
-    geodesic_circle_latlon,
+    geodesic_circle_latlon
+)
 
     anim: animation.FuncAnimation
 
