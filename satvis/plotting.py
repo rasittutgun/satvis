@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import os
+import tempfile
 from typing import Sequence, Tuple
 
 import cartopy.crs as ccrs
@@ -166,4 +168,38 @@ def save_animation_bytes(
 ) -> Tuple[bytes, str, str]:
     """Render animation to bytes.
 
-    Returns
+    Returns:
+        (data_bytes, mime_type, extension)
+    """
+    if fps <= 0:
+        raise ValueError("FPS must be a positive integer.")
+
+    fmt_norm = fmt.strip().lower()
+    if fmt_norm not in {"gif", "mp4"}:
+        raise ValueError("Unsupported format. Use 'gif' or 'mp4'.")
+
+    mime = "image/gif" if fmt_norm == "gif" else "video/mp4"
+    ext = fmt_norm
+
+    if fmt_norm == "gif":
+        writer = animation.PillowWriter(fps=fps)
+    else:
+        writer = animation.FFMpegWriter(
+            fps=fps,
+            codec="libx264",
+            extra_args=["-pix_fmt", "yuv420p"],
+        )
+
+    temp_file = tempfile.NamedTemporaryFile(suffix=f".{ext}", delete=False)
+    temp_path = temp_file.name
+    temp_file.close()
+
+    try:
+        anim.save(temp_path, writer=writer)
+        with open(temp_path, "rb") as f:
+            data = f.read()
+    finally:
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
+
+    return data, mime, ext
