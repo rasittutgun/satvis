@@ -33,8 +33,8 @@ st.caption("Skyfield + Cartopy based nadir track and antenna footprint visualiza
 
 with st.sidebar:
     st.header("Input Parameters")
-    tle_text = st.text_area("TLE (2 veya 3 satır)", value=ISS_TLE_DEFAULT, height=140)
-    fov_deg = st.number_input("Antenna FoV (derece)", min_value=0.1, max_value=179.0, value=120.0, step=0.5)
+    tle_text = st.text_area("TLE (2 or 3 rows)", value=ISS_TLE_DEFAULT, height=140)
+    fov_deg = st.number_input("Antenna FoV (degrees)", min_value=0.1, max_value=179.0, value=120.0, step=0.5)
 
     now_utc = datetime.now(timezone.utc)
     default_start = now_utc
